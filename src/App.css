@@ -1,3 +1,16 @@
 .timeline-header {
   padding-left: 0;
 }
+
+.timeline-comments {
+  border: 3px solid #fcfcfc;
+  border-radius: 3px;
+  margin-top: 15px;
+  padding: 10px 15px;
+}
+
+.timeline-comments__header {
+  color: #8c8c8c;
+  margin-top: 0;
+  cursor: pointer
+}

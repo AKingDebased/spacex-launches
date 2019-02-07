@@ -63,13 +63,40 @@ function Loading() {
   );
 }
 
+
+class Comments extends React.Component {
+  constructor (props) {
+    super(props);
+
+    this.state = { hasLoadedComments: false }
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick () {
+    this.setState(prevState => ({
+      hasLoadedComments: !prevState.hasLoadedComments
+    }));
+  }
+
+  render () {
+    return (
+      <div className="timeline-comments">
+        <h3 className="timeline-comments__header" onClick={this.handleClick}>Comments {!this.state.hasLoadedComments ? '(click to load)' : ''}</h3>
+      </div>
+    )
+  }
+}
+
 function Launches({ launches }) {
   const launchesByDate = launches.reduce((list, launch) => {
     const date = launch.launch_date_utc.slice(0, 4);
     list[date] = list[date] || [];
     list[date].push(launch);
+    // debugger;
     return list;
   }, {});
+
 
   return (
     <ul data-testid="launches" className="timeline timeline-variant">
@@ -85,33 +112,41 @@ function Launches({ launches }) {
   );
 }
 
-function Launch({ launch }) {
-  const launchIcon = launch.launch_success ? (
-    <i className="icon mdi mdi-rocket" />
-  ) : (
-    <i className="icon mdi mdi-bomb" />
-  );
+class Launch extends React.Component {
+  constructor (props) {
+    super(props);
 
-  return (
-    <li className="timeline-item timeline-item-detailed right">
-      <div className="timeline-content timeline-type file">
-        <div className="timeline-icon">{launchIcon}</div>
+    this.launch = props.launch;
+    this.launchIcon = this.launch.launch_success ? (
+      <i className="icon mdi mdi-rocket" />
+    ) : (
+      <i className="icon mdi mdi-bomb" />
+    );
+  }
 
-        <div className="timeline-header">
-          <span className="timeline-autor">
-            #{launch.id}: {launch.mission_name}
-          </span>{' '}
-          <p className="timeline-activity">
-            {launch.rocket.rocket_name} &mdash; {launch.launch_site.site_name}
-          </p>
-          <span className="timeline-time">{launch.launch_date_utc.slice(0, 10)}</span>
+  render () {
+    return (
+      <li className="timeline-item timeline-item-detailed right">
+        <div className="timeline-content timeline-type file">
+          <div className="timeline-icon">{this.launchIcon}</div>
+
+          <div className="timeline-header">
+            <span className="timeline-autor">
+              #{this.launch.id}: {this.launch.mission_name}
+            </span>{' '}
+            <p className="timeline-activity">
+              {this.launch.rocket.rocket_name} &mdash; {this.launch.launch_site.site_name}
+            </p>
+            <span className="timeline-time">{this.launch.launch_date_utc.slice(0, 10)}</span>
+          </div>
+          <div className="timeline-summary">
+            <p>{this.launch.details}</p>
+          </div>
+          <Comments />
         </div>
-        <div className="timeline-summary">
-          <p>{launch.details}</p>
-        </div>
-      </div>
-    </li>
-  );
+      </li>
+    );
+  }
 }
 
 export default function App() {
